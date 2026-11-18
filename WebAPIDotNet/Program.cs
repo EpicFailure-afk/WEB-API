@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using WebAPIDotNet.Models;
+
 namespace WebAPIDotNet
 {
   public class Program
@@ -10,6 +13,12 @@ namespace WebAPIDotNet
       // Add services to the container.
 
       builder.Services.AddControllers();
+
+      builder.Services.AddDbContext<Context>(options =>
+      {
+        options.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
+      });
+      
       // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
       builder.Services.AddOpenApi();
 
