@@ -19,6 +19,8 @@ namespace WebAPIDotNet.Controllers
       deptRepo = _deptRepo;
     }
 
+    //EndPoints
+
     //api/Department Get
     [HttpGet]
     public IActionResult DisplayAllDepts()
@@ -35,19 +37,34 @@ namespace WebAPIDotNet.Controllers
       return Ok(dept);
     }
 
+    [HttpGet("{Name:alpha}")]
+    public IActionResult GetByName(string name)
+    {
+      Department deptName = deptRepo.GetByName(name);
+      return Ok(deptName);
+    }
+
     //api/Department Post
     [HttpPost]
     public IActionResult AddDept(Department dept)
     {
       deptRepo.AddDept(dept);
       deptRepo.Save();
-      return Created($"http://localhost:44345/api/department/{dept.Id}", dept);
+      return CreatedAtAction("GetById", new {id = dept.Id} ,dept);
     }
-    //api/Department Put 
-    //[HttpPut]
-    //public IActionResult EditDept(Department dept)
-    //{
 
-    //}
+    [HttpPut("{id:int}")]
+    public IActionResult EditDept(int id, Department dept)
+    {
+      if (id != dept.Id)
+        return BadRequest();
+      bool req = deptRepo.EditDept(dept);
+      if (req == false)
+      {
+        return NotFound();
+      }
+      deptRepo.Save();
+      return NoContent();
+    }
   }
 }

@@ -1,4 +1,5 @@
-﻿using WebAPIDotNet.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using WebAPIDotNet.Models;
 
 namespace WebAPIDotNet.Repositories
 {
@@ -20,11 +21,6 @@ namespace WebAPIDotNet.Repositories
       context.Add(dept);
     }
 
-    public void EditDept(Department dept)
-    {
-      context.Department.FirstOrDefault(d => d.Id == dept.Id);
-    }
-
     public void Save()
     {
       context.SaveChanges();
@@ -34,6 +30,24 @@ namespace WebAPIDotNet.Repositories
     {
       Department dept = context.Department.FirstOrDefault(d => d.Id == id);
       return dept;
+    }
+
+    public Department GetByName(string name)
+    {
+      Department deptName = context.Department.FirstOrDefault(n => n.Name == name);
+      return deptName;
+    }
+
+    public bool EditDept(Department deptFromRq)
+    {
+      var deptFromDb = context.Department.FirstOrDefault(d => d.Id == deptFromRq.Id);
+      if (deptFromDb == null)
+      {
+        return false;
+      }
+      deptFromDb.Name = deptFromRq.Name;
+      deptFromDb.ManagerName = deptFromRq.ManagerName;
+      return true;
     }
   }
 }
