@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using WebAPIDotNet.Models;
+using WebAPIDotNet.Repositories;
 
 namespace WebAPIDotNet
 {
@@ -18,6 +19,8 @@ namespace WebAPIDotNet
       {
         options.UseSqlServer(builder.Configuration.GetConnectionString("cs"));
       });
+
+      builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
       
       // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
       builder.Services.AddOpenApi();
