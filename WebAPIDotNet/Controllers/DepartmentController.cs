@@ -2,7 +2,10 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Namotion.Reflection;
 using System.Net;
+using WebAPIDotNet.DTO;
+
 //using System.Web.Http;
 using WebAPIDotNet.Models;
 using WebAPIDotNet.Repositories;
@@ -29,6 +32,37 @@ namespace WebAPIDotNet.Controllers
       return Ok(depts);
     }
 
+    #region using instructor code(manual mapping)
+    /*
+    [HttpGet("Details")]
+    public IActionResult DeptsInfo()
+    {
+      List<Department> Depts = deptRepo.GetDeptDetails();
+      List<DepartmentDetailsDto> deptInfo = new List<DepartmentDetailsDto>();
+
+      foreach (Department dept in Depts)
+      {
+        DepartmentDetailsDto deptDetails = new DepartmentDetailsDto();
+        deptDetails.Name = dept.Name;
+        deptDetails.Id = dept.Id;
+        int Count = dept.Employees.Count();
+        deptDetails.EmpsCount = Count;
+        deptInfo.Add(deptDetails);
+      }
+      return Ok(deptInfo);
+    }
+    */
+    #endregion
+
+    #region using Projection
+    [HttpGet("Details")]
+    public IActionResult DeptsInfo()
+    {
+      var depts = deptRepo.GetDeptDetails();
+      return Ok(depts);
+    }
+    #endregion
+
     [HttpGet]
     [Route("{id:int}")] //api/department/1
     public IActionResult GetById(int id)
@@ -50,7 +84,7 @@ namespace WebAPIDotNet.Controllers
     {
       deptRepo.AddDept(dept);
       deptRepo.Save();
-      return CreatedAtAction("GetById", new {id = dept.Id} ,dept);
+      return CreatedAtAction("GetById", new { id = dept.Id }, dept);
     }
 
     [HttpPut("{id:int}")]

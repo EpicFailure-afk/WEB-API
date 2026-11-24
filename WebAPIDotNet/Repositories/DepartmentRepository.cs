@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using WebAPIDotNet.DTO;
 using WebAPIDotNet.Models;
 
 namespace WebAPIDotNet.Repositories
 {
-  public class DepartmentRepository: IDepartmentRepository
+  public class DepartmentRepository : IDepartmentRepository
   {
     Context context;
     public DepartmentRepository(Context _context)
@@ -48,6 +50,22 @@ namespace WebAPIDotNet.Repositories
       deptFromDb.Name = deptFromRq.Name;
       deptFromDb.ManagerName = deptFromRq.ManagerName;
       return true;
+    }
+
+    // public List<Department> GetDeptDetails()
+    // {
+    //   return context.Department.Include(d => d.Employees).ToList();
+    // }
+
+    //* using Projection 
+    public List<DepartmentDetailsDto> GetDeptDetails()
+    {
+      return context.Department.Select(d => new DepartmentDetailsDto
+        {
+          Name = d.Name,
+          Id = d.Id,
+          EmpsCount = d.Employees.Count()
+        }).ToList();
     }
   }
 }

@@ -1,4 +1,5 @@
-﻿using WebAPIDotNet.Models;
+﻿using WebAPIDotNet.DTO;
+using WebAPIDotNet.Models;
 
 namespace WebAPIDotNet.Repositories
 {
@@ -10,5 +11,7 @@ namespace WebAPIDotNet.Repositories
     public void AddDept(Department dept);
     public bool EditDept(Department dept);
     public void Save();
+    // public List<Department> GetDeptDetails();
+    public List<DepartmentDetailsDto> GetDeptDetails();
   }
 }
