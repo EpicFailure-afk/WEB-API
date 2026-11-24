@@ -40,6 +40,47 @@ namespace WebAPIDotNet.Migrations
 
                     b.ToTable("Department");
                 });
+
+            modelBuilder.Entity("WebAPIDotNet.Models.Employee", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("Employee");
+                });
+
+            modelBuilder.Entity("WebAPIDotNet.Models.Employee", b =>
+                {
+                    b.HasOne("WebAPIDotNet.Models.Department", "Department")
+                        .WithMany("Employee")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("WebAPIDotNet.Models.Department", b =>
+                {
+                    b.Navigation("Employee");
+                });
 #pragma warning restore 612, 618
         }
     }
