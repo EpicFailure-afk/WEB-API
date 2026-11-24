@@ -1,5 +1,6 @@
 
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using WebAPIDotNet.Models;
 using WebAPIDotNet.Repositories;
 
@@ -21,9 +22,20 @@ namespace WebAPIDotNet
       });
 
       builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-      
+
       // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
       builder.Services.AddOpenApi();
+
+      builder.Services.AddCors(options =>
+      {
+        // allow some cors
+        options.AddPolicy("MyPlicy", policy =>
+        {
+          policy.AllowAnyOrigin()
+          .AllowAnyMethod()
+          .AllowAnyHeader();
+        });
+      });
 
       var app = builder.Build();
 
@@ -38,8 +50,11 @@ namespace WebAPIDotNet
         });
       }
 
-      app.UseAuthorization();
+      app.UseStaticFiles(); //wwwroot
 
+      app.UseCors("MyPlicy");
+
+      app.UseAuthorization();
 
       app.MapControllers();
 
